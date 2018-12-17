@@ -5,17 +5,18 @@ Created on Wed Nov 14 05:25:10 2018
 @author: bugur
 """
 
+import pickle as pk
 import pandas as pd
 import numpy as np
+import tweet_catch as tC
 import matplotlib.pyplot as plt
+import ps_preprocess as pp
 from wordcloud import WordCloud
 from sklearn.naive_bayes import MultinomialNB
-import ps_preprocess as pp
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn import metrics
 from sklearn.metrics import accuracy_score
-import pickle as pk
 
 #Read dataset
 tweets = pd.read_csv('C:\\Users\\bugur\\OneDrive\\Desktop\\TwitterSpamDetector\\Datasets\\SpamAndHam.csv')
@@ -35,33 +36,6 @@ print('\n------------------\n')
 
 #Get number of tweets from the matris tweets and create offsets for training and testing purposes
 totalTweets = tweets['TweetText'].shape[0]
-trainOffset, testOffset = list(), list()
-
-#Using random selection for separation with sensitivity of 0.8
-#Meaning that 80% of the dataset will be use for training purposes
-#Remaining 20% will be used for testing and discovering accuracy 
-for i in range(tweets.shape[0]):
-    if np.random.uniform(0, 1) < 0.8:
-        trainOffset += [i]
-    else:
-        testOffset += [i]
-
-#Loading the training and testing data with the randomly selected location offsets
-train_data = tweets.loc[trainOffset]
-test_data = tweets.loc[testOffset]
-#Showcase training data
-train_data.reset_index(inplace = True)
-train_data.drop(['index'], axis = 1, inplace = True)
-train_preview = train_data.head(10)
-print('*********** SHOWCASE OF TRAINING DATA ***********')
-print(train_preview)
-print('\n')
-
-#Training data grouping by label
-train_group = train_data['Label'].value_counts()
-print('*********** TRAINING DATA GROUPED BY LABEL ***********')
-print(train_group)
-print('\n------------------\n')
     
 spam_words = ' '.join(list(tweets[tweets['Label'] == 1]['TweetText']))
 spam_Vcloud = WordCloud(width = 512, height = 512).generate(spam_words)
@@ -81,6 +55,35 @@ plt.axis('off')
 plt.tight_layout(pad = 0)
 print('*********** HAM WORD CLOUD ***********')
 plt.show()
+print('\n------------------\n')
+
+trainOffset, testOffset = list(), list()
+
+#Using random selection for separation with sensitivity of 0.8
+#Meaning that 80% of the dataset will be use for training purposes
+#Remaining 20% will be used for testing and discovering accuracy 
+
+for i in range(tweets.shape[0]):
+    if np.random.uniform(0, 1) < 0.8:
+        trainOffset += [i]
+    else:
+        testOffset += [i]
+
+#Loading the training and testing data with the randomly selected location offsets
+train_data = tweets.loc[trainOffset]
+test_data = tweets.loc[testOffset]
+#Showcase training data
+train_data.reset_index(inplace = True)
+train_data.drop(['index'], axis = 1, inplace = True)
+train_preview = train_data.head(15)
+print('*********** SHOWCASE OF TRAINING DATA ***********')
+print(train_preview)
+print('\n')
+
+#Training data grouping by label
+train_group = train_data['Label'].value_counts()
+print('*********** TRAINING DATA GROUPED BY LABEL ***********')
+print(train_group)
 print('\n------------------\n')
 
 tweetFeatures = tweets['TweetText'].copy()
@@ -119,5 +122,17 @@ fscore = metrics.f1_score(labels_test, prediction, average='macro')
 print("\nMNB F1 score is: {:.2f}".format(fscore))
 
 vectorizer, mnb = load()
-print('\n------------------\n')
-print("*********** TEST PHASE WITH LIVE TWEET ***********")
+print("*********** TEST PHASE WITH LIVE TWEET ***********\n")
+
+
+
+twitter_client = tC.TwitterClient()
+tweets = twitter_client.get_live_feed(1)
+tweetList = []
+tweetList.append(tweets[0].text)
+
+input_transformed = vectorizer.transform(tweetList)
+prediction = mnb.predict(input_transformed)
+
+print('Analyzed live-tweet:', tweetList)
+print('\nAccording to MNB Classification this tweet is', 'SPAM' if prediction else 'HAM')

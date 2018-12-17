@@ -77,11 +77,3 @@ if __name__ == '__main__':
     tweetList = []
     tweetList.append(tweets[0].text)
     print(tweetList)
-    
-    
-
-'''   
-    api = twitter_client.get_twitter_client_api()
-    tweets = api.user_timeline(screen_name="HamillHimself", count=5)
-    SC.feedTweet(tweets)
-'''
