@@ -9,13 +9,12 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
-from sklearn.naive_bayes import MultinomialNB, GaussianNB
+from sklearn.naive_bayes import MultinomialNB
 import ps_preprocess as pp
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn import metrics
 from sklearn.metrics import accuracy_score
-from sklearn.svm import SVC
 import pickle as pk
 
 #Read dataset
