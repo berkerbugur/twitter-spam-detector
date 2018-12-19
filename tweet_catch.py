@@ -68,7 +68,7 @@ class TweetAnalyze():
 
         return df
 
-### MAIN METHOD TO EXECUTE ON ACTIVE PATH ###
+### DRIVER METHOD TO EXECUTE ON ACTIVE PATH ###
 if __name__ == '__main__':
     
     twitter_client = TwitterClient()
@@ -77,3 +77,4 @@ if __name__ == '__main__':
     tweetList = []
     tweetList.append(tweets[0].text)
     print(tweetList)
+    print(tweets[0].user.screen_name)
