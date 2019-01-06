@@ -120,13 +120,15 @@ alg_f1 = []
 mnb = MultinomialNB(alpha=0.2)
 mnb.fit(features_train, labels_train)
 prediction = mnb.predict(features_test)
-print('MULTINOMIAL NAIVE BAYES SCORE:', accuracy_score(labels_test,prediction))
+conf_mat = metrics.confusion_matrix(labels_test, prediction)
+print('MULTINOMIAL NAIVE BAYES SCORE:', accuracy_score(labels_test, prediction))
 alg_name.append('Multinomial Naive Bayes')
 alg_accuracies.append(mnb.score(features_test, labels_test) * 100)
 
 bnb = BernoulliNB()
 bnb.fit(features_train, labels_train)
 pred_bnb = bnb.predict(features_test)
+conf_mat_bnb = metrics.confusion_matrix(labels_test, pred_bnb)
 print('BERNOULLI NAIVE BAYES SCORE:', accuracy_score(labels_test,pred_bnb))
 alg_name.append('Bernoulli Naive Bayes')
 alg_accuracies.append(bnb.score(features_test, labels_test) * 100)
@@ -134,6 +136,7 @@ alg_accuracies.append(bnb.score(features_test, labels_test) * 100)
 svc = SVC(gamma="scale")
 svc.fit(features_train, labels_train)
 pred_svc = svc.predict(features_test)
+conf_mat_svc = metrics.confusion_matrix(labels_test, pred_svc)
 print('SUPPORT VECTOR MACHINE SCORE:', accuracy_score(labels_test, pred_svc))
 alg_name.append('Support Vector Machine')
 alg_accuracies.append(svc.score(features_test, labels_test) * 100)
@@ -180,10 +183,29 @@ plt.ylabel('Algorithm F1 Score')
 plt.title('Algorithm F1 Accuracy Score Comparison')
 plt.show()
 
+
+#Confusion Matrix For MNB
+labels = ['HAM', 'SPAM']
+fig = plt.figure()
+ax = fig.add_subplot(111)
+cax = ax.matshow(conf_mat)
+plt.title('Confusion Matrix Of The MNB Classifier\n')
+fig.colorbar(cax)
+tick_marks = np.arange(len(labels))
+plt.xlabel('\nPredicted Label')
+plt.ylabel('True Label')
+plt.xticks(tick_marks, labels, rotation=0)
+plt.yticks(tick_marks, labels)
+s = [['TN','FP'], ['FN', 'TP']]
+for i in range(2):
+    for j in range(2):
+        plt.text(j,i, str(s[i][j])+" = "+str(conf_mat[i][j]))
+plt.show()
+
 vectorizer, mnb = loadMNB()
 
 
-
+'''
 print("\n*********** TEST PHASE WITH LIVE TWEET ***********\n")
 
 twitter_client = tC.TwitterClient()
@@ -198,3 +220,5 @@ prediction = mnb.predict(input_transformed)
 print('Analyzed live-tweet:', tweetList)
 print('By user: @'+ accused_user)
 print('\nAccording to MNB Classification this tweet is', 'SPAM' if prediction else 'HAM')
+
+'''
