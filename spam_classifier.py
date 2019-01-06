@@ -24,7 +24,7 @@ from sklearn.metrics import accuracy_score
 warnings.filterwarnings('ignore')
 
 #Read dataset
-tweets = pd.read_csv('C:\\Users\\bugur\\OneDrive\\Desktop\\TwitterSpamDetector\\Datasets\\SpamAndHam.csv')
+tweets = pd.read_csv('SpamAndHam.csv')
 tweets['length'] = tweets['TweetText'].apply(len)
 
 #Showcase data
