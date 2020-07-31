@@ -34,6 +34,6 @@ python -tt spam_classifier.py
 
 # Possible refactoring and commenting is on it's way.
 
-#### I would like to thank my beloved teacher Dr. M. Ali Aydın for giving me this project which pushed me to my limits and made me explore beyond my comfort zone. This project was done as a finishing project for my CE degree.
+#### I would like to thank my beloved teacher Dr. M. Ali Aydın for giving me this project which pushed me to my limits and made me explore beyond my comfort zone. This project was done as a thesis project for my CE degree.
 
 For any further info or question feel free to contact me.
